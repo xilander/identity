@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Seguridad.Core.Data;
 using Seguridad.Core.Dto;
 using Seguridad.Core.Entities;
+using Seguridad.Core.JwtLogic;
 
 namespace Seguridad.Core.Application
 {
@@ -17,8 +18,10 @@ namespace Seguridad.Core.Application
             public string? Nombre { get; set; }
             public string? Apellido { get; set; }
             public string? Email { get; set; }
+            public string? UserName { get; set; }
             public string? Password { get; set; }
         }
+
         public class RegistroUsuarioValidator : AbstractValidator<RegistroUsuarioCommand>
         {
             public RegistroUsuarioValidator()
@@ -35,12 +38,14 @@ namespace Seguridad.Core.Application
             private readonly ApplicationDbContext _context;
             private readonly UserManager<Usuario> _userManager;
             private readonly IMapper _mapper;
+            private readonly IJwtGenerator _jwtGenerator;
 
-            public RegistroUsuarioHandler(ApplicationDbContext context, UserManager<Usuario> userManager, IMapper mapper)
+            public RegistroUsuarioHandler(ApplicationDbContext context, UserManager<Usuario> userManager, IMapper mapper, IJwtGenerator jwtGenerator)
             {
                 _context = context;
                 _userManager = userManager;
                 _mapper =  mapper;
+                _jwtGenerator = jwtGenerator;
             }
             public async Task<UsuarioDto> Handle(RegistroUsuarioCommand request, CancellationToken cancellationToken)
             {
@@ -53,6 +58,7 @@ namespace Seguridad.Core.Application
                 {
                     Nombre = request.Nombre,
                     Apellido = request.Apellido,
+                    UserName = request.UserName,
                     Email = request.Email,
                 };
                 
@@ -60,6 +66,7 @@ namespace Seguridad.Core.Application
                    
                 if (resultado.Succeeded) {
                     var usuarioDTO = _mapper.Map<Usuario, UsuarioDto>(usuario);
+                    usuarioDTO.Token = _jwtGenerator.CrearToken(usuario); 
                     return usuarioDTO;
                 }
                 throw new Exception("No se pudo crear el usuario");

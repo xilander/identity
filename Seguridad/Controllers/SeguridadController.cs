@@ -35,5 +35,17 @@ namespace Seguridad.Controllers
         {
             return await _mediator.Send(parametros);
         }
+        
+        [HttpPost("login")]
+        public async Task<ActionResult<UsuarioDto>> Login(Login.LoginUsuarioCommand parametros)
+        {
+            return await _mediator.Send(parametros);
+        }
+
+        [HttpGet("sesion")]
+        public async Task<ActionResult<UsuarioDto>> Get()
+        {
+            return await _mediator.Send(new UsuarioActual.UsuarioActualCommand());
+        }
     }
 }
