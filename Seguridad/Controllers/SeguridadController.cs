@@ -25,6 +25,7 @@ namespace Seguridad.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<List<Usuario>> GetUsuarios()
         {
             return await _context.Users.ToListAsync();
