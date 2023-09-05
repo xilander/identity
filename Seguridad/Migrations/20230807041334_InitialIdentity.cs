@@ -37,6 +37,8 @@ namespace Seguridad.Migrations
                     NormalizedEmail = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     EmailConfirmed = table.Column<bool>(type: "boolean", nullable: false),
                     PasswordHash = table.Column<string>(type: "text", nullable: true),
+                    Nombre = table.Column<string>(type: "character varying(256)", maxLength: 25, nullable: true),
+                    Apellido = table.Column<string>(type: "character varying(256)", maxLength: 25, nullable: true),
                     SecurityStamp = table.Column<string>(type: "text", nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "text", nullable: true),
                     PhoneNumber = table.Column<string>(type: "text", nullable: true),
