@@ -25,6 +25,7 @@ namespace Seguridad.Controllers
         }
 
         [HttpGet]
+        // prueba para git
         [Authorize]
         public async Task<List<Usuario>> GetUsuarios()
         {
