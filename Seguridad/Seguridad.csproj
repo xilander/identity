@@ -7,6 +7,7 @@
     <UserSecretsId>aspnet-Seguridad-d5b15d68-2955-43f9-bf31-ac2e569c1a70</UserSecretsId>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
