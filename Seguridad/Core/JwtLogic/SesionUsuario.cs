@@ -11,8 +11,12 @@
 
         public string GetSesionUsuario()
         {
-            var userName = _httpContextAccessor.HttpContext.User?.Claims?.FirstOrDefault(x => x.Type == "username")?.Value;
-            return userName;
+            var context = _httpContextAccessor.HttpContext;
+
+            var userName = context.User.Claims.FirstOrDefault( x => x.Type == "username" ).Value;
+
+               // _httpContextAccessor.HttpContext.User?.Claims?.FirstOrDefault(x => x.Type == "username")?.Value;
+            return userName!;
         }
 
     }

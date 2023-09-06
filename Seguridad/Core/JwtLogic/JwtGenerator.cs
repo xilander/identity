@@ -12,9 +12,9 @@ namespace Seguridad.Core.JwtLogic
         {
             var claims = new List<Claim>
             {
-                new Claim("username", usuario.UserName),
-                new Claim("nombre", usuario.Nombre),
-                new Claim("apellido", usuario.Apellido)
+                new Claim("username", usuario.UserName!),
+                new Claim("nombre", usuario.Nombre!),
+                new Claim("apellido", usuario.Apellido!),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("PwgGWhA738I4HoJHEMxEZttLUunzBmpY"));

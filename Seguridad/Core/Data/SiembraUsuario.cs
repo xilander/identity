@@ -7,23 +7,37 @@ namespace Seguridad.Core.Data
 	{
         public static async Task Initialize(IServiceProvider serviceProvider)
         {
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<Usuario>>();
 
-            //Create the Admin User
-            var adminUser = new Usuario
-            {
-                UserName = "Admin",
-                Email = "xilander@gmail.com",
-                Nombre = "Gang",
-                Apellido = "of Four"
-            };
+            string[] rolesNames = { "Admin", "Usuario" };
+            IdentityResult roleResult;
 
-            var userExist = await userManager.FindByEmailAsync(adminUser.Email);
-            if (userExist == null)
+            foreach (var roleName in rolesNames)
             {
+                var roleExist = await roleManager.RoleExistsAsync(roleName);
+                if (!roleExist)
+                {
+                    //create the roles and seed them to the database
+                    roleResult = await roleManager.CreateAsync(new IdentityRole(roleName));
+                }
+            }
+
+            //Crea el usuario admin si la tabla de usuarios esta vacía
+            if ( !userManager.Users.Any())
+            {
+                var adminUser = new Usuario
+                {
+                    UserName = "admin",
+                    Email = "admin@allie.mx",
+                    Nombre = "Gang",
+                    Apellido = "of Four"
+                };
+
                 IdentityResult createAdminUser = await userManager.CreateAsync(adminUser, "Abcd1234+");
                 if (createAdminUser.Succeeded)
                 {
+                    await userManager.AddToRoleAsync(adminUser, "Admin");
                     Console.WriteLine("se creo");
                 }
             }

@@ -3,7 +3,6 @@ using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Seguridad.Core.Data;
 using Seguridad.Core.Dto;
 using Seguridad.Core.Entities;
@@ -62,7 +61,7 @@ namespace Seguridad.Core.Application
                     Email = request.Email,
                 };
                 
-                var resultado = await _userManager.CreateAsync(usuario, request.Password);
+                var resultado = await _userManager.CreateAsync(usuario, request.Password!);
                    
                 if (resultado.Succeeded) {
                     var usuarioDTO = _mapper.Map<Usuario, UsuarioDto>(usuario);

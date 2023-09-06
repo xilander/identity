@@ -17,16 +17,20 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddAuthorization();
 builder.Services.AddDbContext<ApplicationDbContext>( options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 builder.Services.AddAutoMapper(typeof(Registro.RegistroUsuarioHandler));
 builder.Services.AddControllers();
-builder.Services.AddAuthorization();
+
 builder.Services.AddScoped<IJwtGenerator, JwtGenerator>();
 builder.Services.AddScoped<ISesionUsuario, SesionUsuario>();
+
+//builder.Services.AddIdentityCore<Usuario>();
+builder.Services.AddIdentity<Usuario, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
 
 SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("PwgGWhA738I4HoJHEMxEZttLUunzBmpY"));
 
@@ -37,11 +41,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = key,
         ValidateAudience = false,
-        ValidateIssuer = false
+        ValidateIssuer = false,
+        ClockSkew = TimeSpan.Zero
     };
 });
 
-builder.Services.AddIdentityCore<Usuario>();
+builder.Services.AddAuthorization();
+
 var identityBuilder = new IdentityBuilder(typeof(Usuario), builder.Services);
 identityBuilder.AddEntityFrameworkStores<ApplicationDbContext>();
 identityBuilder.AddSignInManager<SignInManager<Usuario>>();

@@ -44,12 +44,12 @@ namespace Seguridad.Core.Application
 
             public async Task<UsuarioDto> Handle(LoginUsuarioCommand request, CancellationToken cancellationToken)
             {
-                var usuario = await _userManager.FindByEmailAsync(request.Email);
+                var usuario = await _userManager.FindByEmailAsync(request.Email!);
                 if (usuario == null)
                 {
                     throw new Exception("El usuario no existe");
                 }
-                var resultado = await _signInManager.CheckPasswordSignInAsync(usuario, request.Password, false);
+                var resultado = await _signInManager.CheckPasswordSignInAsync(usuario, request.Password!, false);
                 if (resultado.Succeeded)
                 {
                     var usuarioDTO = _mapper.Map<Usuario, UsuarioDto>(usuario);

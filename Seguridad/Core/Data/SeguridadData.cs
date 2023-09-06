@@ -21,7 +21,7 @@ namespace Seguridad.Core.Data
                     Nombre = "Gang",
                     Apellido = "of Four",
                     UserName = "Admin",
-                    Email = "xilander@gmail.comx"
+                    Email = "xilander@gmail.com"
                 };
 
                 await userManager.CreateAsync(usuario, "Abcd1234+");

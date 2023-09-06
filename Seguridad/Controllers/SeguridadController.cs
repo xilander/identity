@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Web.Resource;
 using Seguridad.Core.Application;
 using Seguridad.Core.Data;
 using Seguridad.Core.Dto;
@@ -17,15 +16,16 @@ namespace Seguridad.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IMediator _mediator;
+        private readonly ILogger<SeguridadController> _logger;
 
-        public SeguridadController(ApplicationDbContext context, IMediator mediator)
+        public SeguridadController(ApplicationDbContext context, IMediator mediator, ILogger<SeguridadController> logger)
         {
             _context = context;
             _mediator = mediator;
+            _logger = logger;
         }
 
         [HttpGet]
-        // prueba para git
         [Authorize]
         public async Task<List<Usuario>> GetUsuarios()
         {
@@ -47,6 +47,7 @@ namespace Seguridad.Controllers
         [HttpGet("sesion")]
         public async Task<ActionResult<UsuarioDto>> Get()
         {
+            _logger.LogError("no se que paso");
             return await _mediator.Send(new UsuarioActual.UsuarioActualCommand());
         }
     }
