@@ -10,7 +10,7 @@ namespace Seguridad.Core.Data
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<Usuario>>();
 
-            string[] rolesNames = { "Admin", "Usuario" };
+            string[] rolesNames = { "Admin", "Supervisor", "Usuario" };
             IdentityResult roleResult;
 
             foreach (var roleName in rolesNames)
@@ -29,7 +29,7 @@ namespace Seguridad.Core.Data
                 var adminUser = new Usuario
                 {
                     UserName = "admin",
-                    Email = "admin@allie.mx",
+                    Email = "admin@test.com",
                     Nombre = "Gang",
                     Apellido = "of Four"
                 };
@@ -38,7 +38,7 @@ namespace Seguridad.Core.Data
                 if (createAdminUser.Succeeded)
                 {
                     await userManager.AddToRoleAsync(adminUser, "Admin");
-                    Console.WriteLine("se creo");
+                    Console.WriteLine("Se creo usuario Admin");
                 }
             }
         }

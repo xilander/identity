@@ -1,8 +1,10 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Seguridad.Core.Data;
 using Seguridad.Core.Dto;
 using Seguridad.Core.Entities;
@@ -46,8 +48,10 @@ namespace Seguridad.Core.Application
                 _mapper =  mapper;
                 _jwtGenerator = jwtGenerator;
             }
+
             public async Task<UsuarioDto> Handle(RegistroUsuarioCommand request, CancellationToken cancellationToken)
             {
+
                 var existe = await _context.Users.Where( x => x.Email == request.Email).AnyAsync();
                 if (existe) {
                     throw new Exception("El correo del usuario ya existe");
@@ -55,15 +59,17 @@ namespace Seguridad.Core.Application
 
                 var usuario = new Usuario
                 {
-                    Nombre = request.Nombre,
-                    Apellido = request.Apellido,
                     UserName = request.UserName,
                     Email = request.Email,
+                    Nombre = request.Nombre,
+                    Apellido = request.Apellido,
                 };
-                
-                var resultado = await _userManager.CreateAsync(usuario, request.Password!);
-                   
-                if (resultado.Succeeded) {
+
+                IdentityResult crearUsuario = await _userManager.CreateAsync(usuario, request.Password!);
+                if (crearUsuario.Succeeded) {
+
+                    await _userManager.AddToRoleAsync(usuario, "Usuario");
+
                     var usuarioDTO = _mapper.Map<Usuario, UsuarioDto>(usuario);
                     usuarioDTO.Token = _jwtGenerator.CrearToken(usuario); 
                     return usuarioDTO;

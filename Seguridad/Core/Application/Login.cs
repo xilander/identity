@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿
+using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -32,7 +33,7 @@ namespace Seguridad.Core.Application
             private readonly IMapper _mapper;
             private readonly IJwtGenerator _jwtGenerator;
             private readonly SignInManager<Usuario> _signInManager;
-
+            
             public LoginUsuarioHandler( ApplicationDbContext context, UserManager<Usuario> userManager, IMapper mapper, IJwtGenerator jwtGenerator, SignInManager<Usuario> signInManager)
             {
                 _context = context;
@@ -53,10 +54,13 @@ namespace Seguridad.Core.Application
                 if (resultado.Succeeded)
                 {
                     var usuarioDTO = _mapper.Map<Usuario, UsuarioDto>(usuario);
-                    usuarioDTO.Token = _jwtGenerator.CrearToken(usuario);
+                    var tokenCreado = _jwtGenerator.CrearToken(usuario);
+                    usuarioDTO.Token = tokenCreado;
                     return usuarioDTO;
                 }
-                throw new Exception("Credenciales Incorrectas");
+
+                throw new Exception("Credenciales incorrectas");
+
             }
         }
     }

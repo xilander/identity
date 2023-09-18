@@ -3,6 +3,7 @@
     public class SesionUsuario : ISesionUsuario
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private string? userName;
 
         public SesionUsuario(IHttpContextAccessor httpContextAccessor)
         {
@@ -11,11 +12,7 @@
 
         public string GetSesionUsuario()
         {
-            var context = _httpContextAccessor.HttpContext;
-
-            var userName = context.User.Claims.FirstOrDefault( x => x.Type == "username" ).Value;
-
-               // _httpContextAccessor.HttpContext.User?.Claims?.FirstOrDefault(x => x.Type == "username")?.Value;
+            userName = _httpContextAccessor.HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "username")?.Value;
             return userName!;
         }
 
