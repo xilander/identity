@@ -37,19 +37,23 @@ namespace Seguridad.Core.Application
 
             public async Task<UsuarioDto> Handle(SolicitaCambioPasswordCommand request, CancellationToken cancellationToken)
             {
-                var existe = await _context.Users.Where(x => x.Email == request.Email).AnyAsync();
-
-                if (!existe)
+                var usuario = await _userManager.FindByEmailAsync(request.Email!);
+                if (usuario == null)
                 {
                     throw new Exception("No se reconoce el correo ingresado");
                 }
 
-                var usuario = await _userManager.FindByEmailAsync(request.Email!);
+                var lockoutEndDate = await _userManager.GetLockoutEndDateAsync(usuario);
+                if (lockoutEndDate != null && lockoutEndDate > DateTimeOffset.Now)
+                {
+                    throw new Exception(" El usuario está dado de baja");
+                }
+
                 var token = _jwtGenerator.CrearToken(usuario!);
                 //var token = await _userManager.GeneratePasswordResetTokenAsync(usuario!);
 
                 MailData data = new MailData();
-                data.idcliente = usuario.Id;
+                data.idcliente = usuario.Id!;
                 data.EmailToId = usuario.Email!;
                 data.EmailToName = usuario.Nombre!;
                 data.EmailSubject = "Recuperar Contraseña";

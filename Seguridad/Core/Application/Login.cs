@@ -1,4 +1,5 @@
 ﻿
+using System.Security.Claims;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
@@ -50,12 +51,29 @@ namespace Seguridad.Core.Application
                 {
                     throw new Exception("El usuario no existe");
                 }
+
+                var lockoutEndDate = await _userManager.GetLockoutEndDateAsync(usuario);
+                if( lockoutEndDate != null && lockoutEndDate > DateTimeOffset.Now)
+                {
+                    throw new Exception(" El usuario está dado de baja");
+                } 
+
                 var resultado = await _signInManager.CheckPasswordSignInAsync(usuario, request.Password!, false);
                 if (resultado.Succeeded)
                 {
+                    var roles =  await _userManager.GetRolesAsync(usuario);
+                    var claims = new List<Claim>();
+
+                    foreach (var rol in roles)
+                    {
+                        claims.Add(new Claim(ClaimTypes.Role, rol));
+                    }
+                        
                     var usuarioDTO = _mapper.Map<Usuario, UsuarioDto>(usuario);
                     var tokenCreado = _jwtGenerator.CrearToken(usuario);
                     usuarioDTO.Token = tokenCreado;
+                    usuarioDTO.Rol = roles[0];
+                    usuarioDTO.Activo = usuario.LockoutEnabled;
                     return usuarioDTO;
                 }
 

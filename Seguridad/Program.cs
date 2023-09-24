@@ -44,6 +44,7 @@ builder.Services.AddScoped<ISesionUsuario, SesionUsuario>();
 
 //builder.Services.AddIdentityCore<Usuario>();
 builder.Services.AddIdentity<Usuario, IdentityRole>()
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 

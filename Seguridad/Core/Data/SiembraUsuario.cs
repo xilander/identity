@@ -10,7 +10,7 @@ namespace Seguridad.Core.Data
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<Usuario>>();
 
-            string[] rolesNames = { "Admin", "Supervisor", "Usuario" };
+            string[] rolesNames = { "Admin", "Supervisor", "Usuario", "Abogado", "Gestor" };
             IdentityResult roleResult;
 
             foreach (var roleName in rolesNames)
