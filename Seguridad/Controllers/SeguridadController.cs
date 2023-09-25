@@ -26,13 +26,6 @@ namespace Seguridad.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<List<Usuario>> Get()
-        {
-            return await _context.Users.ToListAsync();
-        }
-
         [HttpPost("registrar-usuario")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<UsuarioDto>> Registrar(Registro.RegistroUsuarioCommand parametros)
@@ -40,11 +33,26 @@ namespace Seguridad.Controllers
             _logger.LogInformation("Registro: {correo} el {DT}", parametros.Email, DateTime.UtcNow.ToLocalTime());
             return await _mediator.Send(parametros);
         }
-        
+
+        [HttpGet("listar-usuarios")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult<List<UsuarioDto>>> GetUsuarios()
+        {
+            return await _mediator.Send(new ListaUsuarios.ListaUsuariosCommand());
+        }
+
         [HttpPost("login")]
         public async Task<ActionResult<UsuarioDto>> Login(Login.LoginUsuarioCommand parametros)
         {
             _logger.LogInformation("Ingreso: {correo} el {DT}", parametros.Email, DateTime.UtcNow.ToLocalTime());
+            return await _mediator.Send(parametros);
+        }
+
+        [HttpPut("desactiva-usuario")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult<RespuestaModel>> Desactivar(DesctivaUsuario.DesctivaUsuarioCommand parametros, IMediator _mediator)
+        {
+            _logger.LogInformation("Usuario desactivado: {usuarioID} el {DT}", parametros.Email, DateTime.UtcNow.ToLocalTime());
             return await _mediator.Send(parametros);
         }
 
@@ -66,17 +74,10 @@ namespace Seguridad.Controllers
 
         [HttpPut("cambiar-password")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
         public async Task<ActionResult<UsuarioDto>> Recuperar(Recupera.RecuperaPasswordCommand parametros, IMediator _mediator)
         {
             _logger.LogInformation("Cambio de contraseña para: {usuarioID} el {DT}", parametros.Id, DateTime.UtcNow.ToLocalTime());
-            return await _mediator.Send(parametros);
-        }
-
-        [HttpPut("desactiva-usuario")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<RespuestaModel>> Desactivar(DesctivaUsuario.DesctivaUsuarioCommand parametros, IMediator _mediator)
-        {
-            _logger.LogInformation("Usuario desactivado: {usuarioID} el {DT}", parametros.Email, DateTime.UtcNow.ToLocalTime());
             return await _mediator.Send(parametros);
         }
 

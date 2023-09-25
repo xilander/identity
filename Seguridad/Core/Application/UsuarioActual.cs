@@ -33,7 +33,7 @@ namespace Seguridad.Core.Application
 
                 if (usuario != null) {
                     var usuarioDTO = _mapper.Map<Usuario, UsuarioDto>(usuario);
-                    usuarioDTO.Token = _jwtGenerator.CrearToken(usuario);
+                    usuarioDTO.Token = _jwtGenerator.CrearTokenAsync(usuario);
                     return usuarioDTO;
                 }
 

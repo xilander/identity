@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using Seguridad.Core.Entities;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -9,23 +10,26 @@ namespace Seguridad.Core.JwtLogic
     public class JwtGenerator : IJwtGenerator
     {
         private readonly ILogger _logger;
+        private readonly UserManager<Usuario> _userManager;
 
-        public JwtGenerator(ILogger<JwtGenerator> logger)
+
+        public JwtGenerator(ILogger<JwtGenerator> logger, UserManager<Usuario> userManager)
         {
             _logger = logger;
+            _userManager = userManager;
         }
 
-        public string CrearToken(Usuario usuario)
+        public string CrearTokenAsync(Usuario usuario)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("PwgGWhA738I4HoJHEMxEZttLUunzBmpY"));
-            var credencial = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
-
             var claims = new List<Claim>
             {
                 new Claim("username", usuario.UserName!),
                 new Claim("nombre", usuario.Nombre!),
                 new Claim("apellido", usuario.Apellido!),
             };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("PwgGWhA738I4HoJHEMxEZttLUunzBmpY"));
+            var credencial = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
 
             var tokenDescription = new SecurityTokenDescriptor
             {
@@ -43,6 +47,5 @@ namespace Seguridad.Core.JwtLogic
 
             return tokenHandler.WriteToken(token);
         }
-
     }
 }

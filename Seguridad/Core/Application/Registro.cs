@@ -71,7 +71,7 @@ namespace Seguridad.Core.Application
                     await _userManager.AddToRoleAsync(usuario, "Usuario");
 
                     var usuarioDTO = _mapper.Map<Usuario, UsuarioDto>(usuario);
-                    usuarioDTO.Token = _jwtGenerator.CrearToken(usuario); 
+                    usuarioDTO.Token = _jwtGenerator.CrearTokenAsync(usuario); 
                     return usuarioDTO;
                 }
                 throw new Exception("No se pudo crear el usuario");

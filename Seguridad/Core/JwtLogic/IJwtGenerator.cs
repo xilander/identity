@@ -4,6 +4,6 @@ namespace Seguridad.Core.JwtLogic
 {
     public interface IJwtGenerator
     {
-        string CrearToken(Usuario usuario);
+        string CrearTokenAsync(Usuario usuario);
     }
 }

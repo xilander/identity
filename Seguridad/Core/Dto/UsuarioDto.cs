@@ -9,7 +9,5 @@
         public string? Rol { get; set; }
         public bool Activo { get; set; }
         public string? Token { get; set; }
-        public DateTime? Expira { get; set; }
-
     }
 }

@@ -4,7 +4,6 @@ using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Seguridad.Core.Data;
 using Seguridad.Core.Dto;
 using Seguridad.Core.Entities;
 using Seguridad.Core.JwtLogic;
@@ -29,15 +28,14 @@ namespace Seguridad.Core.Application
 
         public class LoginUsuarioHandler : IRequestHandler<LoginUsuarioCommand, UsuarioDto>
         {
-            private readonly ApplicationDbContext _context;
+         
             private readonly UserManager<Usuario> _userManager;
             private readonly IMapper _mapper;
             private readonly IJwtGenerator _jwtGenerator;
             private readonly SignInManager<Usuario> _signInManager;
             
-            public LoginUsuarioHandler( ApplicationDbContext context, UserManager<Usuario> userManager, IMapper mapper, IJwtGenerator jwtGenerator, SignInManager<Usuario> signInManager)
+            public LoginUsuarioHandler(UserManager<Usuario> userManager, IMapper mapper, IJwtGenerator jwtGenerator, SignInManager<Usuario> signInManager)
             {
-                _context = context;
                 _userManager = userManager;
                 _mapper = mapper;
                 _jwtGenerator = jwtGenerator;
@@ -70,10 +68,9 @@ namespace Seguridad.Core.Application
                     }
                         
                     var usuarioDTO = _mapper.Map<Usuario, UsuarioDto>(usuario);
-                    var tokenCreado = _jwtGenerator.CrearToken(usuario);
+                    var tokenCreado = _jwtGenerator.CrearTokenAsync(usuario);
                     usuarioDTO.Token = tokenCreado;
                     usuarioDTO.Rol = roles[0];
-                    usuarioDTO.Activo = usuario.LockoutEnabled;
                     return usuarioDTO;
                 }
 

@@ -49,7 +49,7 @@ namespace Seguridad.Core.Application
                     throw new Exception(" El usuario está dado de baja");
                 }
 
-                var token = _jwtGenerator.CrearToken(usuario!);
+                var token = _jwtGenerator.CrearTokenAsync(usuario!);
                 //var token = await _userManager.GeneratePasswordResetTokenAsync(usuario!);
 
                 MailData data = new MailData();

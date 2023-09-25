@@ -27,7 +27,7 @@ namespace Seguridad.Core.Application
 
             public async Task<RespuestaModel> Handle(DesctivaUsuarioCommand request, CancellationToken cancellationToken)
             {
-                var existe = await _context.Users.Where(x => x.Email == request.Email).AnyAsync();
+                var existe = await _context.Users.Where(x => x.Email == request.Email).AnyAsync(cancellationToken: cancellationToken);
                 if (!existe)
                 {
                     throw new Exception("El usuario no existe");
@@ -36,10 +36,12 @@ namespace Seguridad.Core.Application
                 try
                 {
                     var usuario = await _userManager.FindByEmailAsync(request.Email!);
-                    var respuesta = new RespuestaModel();
-                    respuesta.Ok = true;
-                    respuesta.Status = 202;
-                    respuesta.StatusText = "Accepted";
+                    var respuesta = new RespuestaModel
+                    {
+                        Ok = true,
+                        Status = 202,
+                        StatusText = "Accepted"
+                    };
 
                     if (request.Activo)
                     {
