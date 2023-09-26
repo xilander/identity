@@ -49,6 +49,7 @@ namespace Seguridad.Core.Application
                         Nombre = usuario.Nombre,
                         Apellido = usuario.Apellido,
                         UserName = usuario.UserName,
+                        Correo = usuario.Email,
                         Rol = roles[0],
                         Activo = activo
                     });
