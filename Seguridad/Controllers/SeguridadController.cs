@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Seguridad.Core.Application;
 using Seguridad.Core.Data;
 using Seguridad.Core.Dto;
@@ -15,13 +14,12 @@ namespace Seguridad.Controllers
 
     public class SeguridadController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+
         private readonly IMediator _mediator;
         private readonly ILogger<SeguridadController> _logger;
 
-        public SeguridadController(ApplicationDbContext context, IMediator mediator, ILogger<SeguridadController> logger)
+        public SeguridadController(IMediator mediator, ILogger<SeguridadController> logger)
         {
-            _context = context;
             _mediator = mediator;
             _logger = logger;
         }
@@ -74,7 +72,6 @@ namespace Seguridad.Controllers
 
         [HttpPut("cambiar-password")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-
         public async Task<ActionResult<UsuarioDto>> Recuperar(Recupera.RecuperaPasswordCommand parametros, IMediator _mediator)
         {
             _logger.LogInformation("Cambio de contraseña para: {usuarioID} el {DT}", parametros.Id, DateTime.UtcNow.ToLocalTime());

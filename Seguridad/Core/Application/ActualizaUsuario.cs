@@ -1,16 +1,14 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Seguridad.Core.Data;
 using Seguridad.Core.Dto;
 using Seguridad.Core.Entities;
-using Seguridad.Core.JwtLogic;
 
 namespace Seguridad.Core.Application
 {
-	public class ActualizaUsuario
+    public class ActualizaUsuario
 	{
 		public class ActualizaUsuarioCommand : IRequest<UsuarioDto>
 		{
