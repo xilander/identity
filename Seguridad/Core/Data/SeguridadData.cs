@@ -1,10 +1,9 @@
-﻿using System;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Seguridad.Core.Entities;
 
 namespace Seguridad.Core.Data
 {
-	public static class SeguridadData
+    public static class SeguridadData
 	{
 
         public static async Task InsertarUsuario(IServiceProvider services, ApplicationDbContext context, UserManager<Usuario> userManager)

@@ -44,17 +44,12 @@ namespace Seguridad.Core.Application
 
             public async Task<UsuarioDto> Handle(LoginUsuarioCommand request, CancellationToken cancellationToken)
             {
-                var usuario = await _userManager.FindByEmailAsync(request.Email!);
-                if (usuario == null)
-                {
-                    throw new Exception("El usuario no existe");
-                }
-
+                var usuario = await _userManager.FindByEmailAsync(request.Email!) ?? throw new Exception("El usuario no existe");
                 var lockoutEndDate = await _userManager.GetLockoutEndDateAsync(usuario);
                 if( lockoutEndDate != null && lockoutEndDate > DateTimeOffset.Now)
                 {
                     throw new Exception(" El usuario está dado de baja");
-                } 
+                }
 
                 var resultado = await _signInManager.CheckPasswordSignInAsync(usuario, request.Password!, false);
                 if (resultado.Succeeded)

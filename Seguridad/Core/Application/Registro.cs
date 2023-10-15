@@ -1,10 +1,8 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Seguridad.Core.Data;
 using Seguridad.Core.Dto;
 using Seguridad.Core.Entities;
@@ -20,20 +18,11 @@ namespace Seguridad.Core.Application
             public string? Apellido { get; set; }
             public string? Email { get; set; }
             public string? UserName { get; set; }
+            public string? Rol { get; set; }
             public string? Password { get; set; }
         }
 
-        public class RegistroUsuarioValidator : AbstractValidator<RegistroUsuarioCommand>
-        {
-            public RegistroUsuarioValidator()
-            {
-                RuleFor(x => x.Nombre).NotEmpty().WithMessage("El nombre es requerido");
-                RuleFor(x => x.Apellido).NotEmpty();
-                RuleFor(x => x.Email).NotEmpty();
-                RuleFor(x => x.Password).NotEmpty().WithMessage("No olvide la contraseña");
-            }
-        }
-        
+       
         public class RegistroUsuarioHandler : IRequestHandler<RegistroUsuarioCommand, UsuarioDto>
         {
             private readonly ApplicationDbContext _context;
@@ -57,22 +46,31 @@ namespace Seguridad.Core.Application
                     throw new Exception("El correo del usuario ya existe");
                 }
 
+
                 var usuario = new Usuario
                 {
-                    UserName = request.UserName,
-                    Email = request.Email,
                     Nombre = request.Nombre,
                     Apellido = request.Apellido,
+                    Email = request.Email,
+                    UserName = request.UserName,
                 };
+                
 
                 IdentityResult crearUsuario = await _userManager.CreateAsync(usuario, request.Password!);
                 if (crearUsuario.Succeeded) {
-
-                    await _userManager.AddToRoleAsync(usuario, "Usuario");
-
-                    var usuarioDTO = _mapper.Map<Usuario, UsuarioDto>(usuario);
-                    usuarioDTO.Token = _jwtGenerator.CrearTokenAsync(usuario); 
-                    return usuarioDTO;
+                    
+                    IdentityResult asignarRol = await _userManager.AddToRoleAsync(usuario, request.Rol!);
+                    if (asignarRol.Succeeded)
+                    {
+                        var usuarioDTO = _mapper.Map<Usuario, UsuarioDto>(usuario);
+                        usuarioDTO.Token = _jwtGenerator.CrearTokenAsync(usuario); 
+                        return usuarioDTO;
+                    }
+                    else
+                    {
+                        await _userManager.DeleteAsync(usuario);
+                        throw new Exception("No se generó el rol");
+                    }
                 }
                 throw new Exception("No se pudo crear el usuario");
             }

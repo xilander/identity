@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Seguridad.Core.Application;
-using Seguridad.Core.Data;
 using Seguridad.Core.Dto;
 using Seguridad.Core.Entities;
 
@@ -37,6 +36,13 @@ namespace Seguridad.Controllers
         public async Task<ActionResult<List<UsuarioDto>>> GetUsuarios()
         {
             return await _mediator.Send(new ListaUsuarios.ListaUsuariosCommand());
+        }
+
+        [HttpPost("obtener-usuario")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult<UsuarioDto>> GetUsuarioById(ObtenerUsuarioPorId.ObtenerUsuarioPorIdCommand parametros)
+        {
+            return await _mediator.Send(parametros);
         }
 
         [HttpPost("login")]
