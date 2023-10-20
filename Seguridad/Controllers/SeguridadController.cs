@@ -23,6 +23,13 @@ namespace Seguridad.Controllers
             _logger = logger;
         }
 
+        [HttpPost("login")]
+        public async Task<ActionResult<UsuarioDto>> Login(Login.LoginUsuarioCommand parametros)
+        {
+            _logger.LogInformation("Ingreso: {correo} el {DT}", parametros.Email, DateTime.UtcNow.ToLocalTime());
+            return await _mediator.Send(parametros);
+        }
+
         [HttpPost("registrar-usuario")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<UsuarioDto>> Registrar(Registro.RegistroUsuarioCommand parametros)
@@ -42,13 +49,6 @@ namespace Seguridad.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<UsuarioDto>> GetUsuarioById(ObtenerUsuarioPorId.ObtenerUsuarioPorIdCommand parametros)
         {
-            return await _mediator.Send(parametros);
-        }
-
-        [HttpPost("login")]
-        public async Task<ActionResult<UsuarioDto>> Login(Login.LoginUsuarioCommand parametros)
-        {
-            _logger.LogInformation("Ingreso: {correo} el {DT}", parametros.Email, DateTime.UtcNow.ToLocalTime());
             return await _mediator.Send(parametros);
         }
 

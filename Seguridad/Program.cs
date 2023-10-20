@@ -14,20 +14,21 @@ using Seguridad.Core.Services;
 using System.Reflection;
 using System.Text;
 
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: MyAllowSpecificOrigins,
-                      policy =>
-                      {
-                          policy.WithOrigins("http://localhost:4200")
-                          .AllowAnyHeader()
-                          .AllowAnyMethod();
-                      });
-});
+builder.Services.AddCors();
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy(name: MyAllowSpecificOrigins,
+//                      policy =>
+//                      {
+//                          policy.WithOrigins("http://localhost:4200",
+//                              "https://intranetallie.encomunidad.mx")
+//                          .AllowAnyHeader()
+//                          .AllowAnyMethod()
+//                          .AllowAnyOrigin();
+//                      });
+//});
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
@@ -91,13 +92,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//app.UseHttpsRedirection();
-//app.UseCors(MyAllowSpecificOrigins);
+
 app.UseCors(builder => builder
     .AllowAnyHeader()
     .AllowAnyMethod()
     .AllowAnyOrigin()
 );
+app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
