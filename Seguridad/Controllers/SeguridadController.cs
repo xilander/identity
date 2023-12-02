@@ -27,7 +27,15 @@ namespace Seguridad.Controllers
         public async Task<ActionResult<UsuarioDto>> Login(Login.LoginUsuarioCommand parametros)
         {
             _logger.LogInformation("Ingreso: {correo} el {DT}", parametros.Email, DateTime.UtcNow.ToLocalTime());
-            return await _mediator.Send(parametros);
+            try
+            {
+                return await _mediator.Send(parametros);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+            
         }
 
         [HttpPost("registrar-usuario")]
@@ -35,7 +43,16 @@ namespace Seguridad.Controllers
         public async Task<ActionResult<UsuarioDto>> Registrar(Registro.RegistroUsuarioCommand parametros)
         {
             _logger.LogInformation("Registro: {correo} el {DT}", parametros.Email, DateTime.UtcNow.ToLocalTime());
-            return await _mediator.Send(parametros);
+            try
+            {
+                return await _mediator.Send(parametros);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+
+            
         }
 
         [HttpGet("listar-usuarios")]
@@ -49,6 +66,14 @@ namespace Seguridad.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<UsuarioDto>> GetUsuarioById(ObtenerUsuarioPorId.ObtenerUsuarioPorIdCommand parametros)
         {
+            return await _mediator.Send(parametros);
+        }
+
+        [HttpPut("actualiza-usuario")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult<UsuarioDto>> Actualizar(ActualizaUsuario.ActualizaUsuarioCommand parametros, IMediator _mediator)
+        {
+            _logger.LogInformation("Usuario actualizado: {usuarioID} el {DT}", parametros.Email, DateTime.UtcNow.ToLocalTime());
             return await _mediator.Send(parametros);
         }
 
@@ -73,7 +98,20 @@ namespace Seguridad.Controllers
         public async Task<ActionResult<UsuarioDto>> SendEmailcliente(Solicita.SolicitaCambioPasswordCommand parametros, IMediator _mediator)
         {
             _logger.LogInformation("Solicitud de recuperación para: {correo} el {DT}", parametros.Email, DateTime.UtcNow.ToLocalTime());
-            return await _mediator.Send(parametros);
+            try
+            {
+                await _mediator.Send(parametros);
+                return Ok(new
+                {
+                    code = 200,
+                    msj = "Se envió correo para restablecer contraseña",
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message.ToString());
+            }
         }
 
         [HttpPut("cambiar-password")]
@@ -81,7 +119,14 @@ namespace Seguridad.Controllers
         public async Task<ActionResult<UsuarioDto>> Recuperar(Recupera.RecuperaPasswordCommand parametros, IMediator _mediator)
         {
             _logger.LogInformation("Cambio de contraseña para: {usuarioID} el {DT}", parametros.Id, DateTime.UtcNow.ToLocalTime());
-            return await _mediator.Send(parametros);
+            try
+            {
+                return await _mediator.Send(parametros);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
         }
 
         [HttpGet("validar-token")]

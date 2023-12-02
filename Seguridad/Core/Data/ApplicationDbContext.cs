@@ -15,3 +15,4 @@ namespace Seguridad.Core.Data
         public DbSet<Usuario> Usuarios { get; set; }
     }
 }
+ 

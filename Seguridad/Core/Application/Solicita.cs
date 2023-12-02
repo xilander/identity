@@ -13,7 +13,7 @@ namespace Seguridad.Core.Application
 {
     public class Solicita
 	{
-		public class SolicitaCambioPasswordCommand : IRequest<UsuarioDto>
+        public class SolicitaCambioPasswordCommand : IRequest<UsuarioDto>
 		{
             public string? Email { get; set; }
         }
@@ -25,9 +25,11 @@ namespace Seguridad.Core.Application
             private readonly IMapper _mapper;
             private readonly IJwtGenerator _jwtGenerator;
             private readonly EnviarCorreos _enviarCorreos;
+            private readonly IConfiguration _configuration;
 
             public SolicitaCambioPasswordHandler(ApplicationDbContext context, UserManager<Usuario> userManager, IMapper mapper, IJwtGenerator jwtGenerator, IConfiguration configuration)
             {
+                _configuration = configuration;
                 _context = context;
                 _userManager = userManager;
                 _mapper = mapper;
@@ -61,7 +63,7 @@ namespace Seguridad.Core.Application
 
                 string filePath = data.path;
                 string emailTemplateText = File.ReadAllText(filePath);
-                string url = "http://localhost:4200/recupera/" + data.idcliente + "/" + token;
+                string url = _configuration["UrlRecovery"] + data.idcliente + "/" + token;
 
                 emailTemplateText = emailTemplateText.Replace("idcliente", data.EmailToName);
                 emailTemplateText = emailTemplateText.Replace("idcorreo", data.EmailToId);
@@ -74,17 +76,13 @@ namespace Seguridad.Core.Application
 
                     var usuarioDTO = _mapper.Map<Usuario, UsuarioDto>(usuario);
                     return usuarioDTO;
-
                 }
                 catch (Exception ex)
                 {
                     throw new Exception(ex.Message);
                 }
-
             }
         }
-
-
     }
 }
 

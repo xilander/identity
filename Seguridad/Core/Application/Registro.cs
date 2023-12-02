@@ -20,6 +20,11 @@ namespace Seguridad.Core.Application
             public string? UserName { get; set; }
             public string? Rol { get; set; }
             public string? Password { get; set; }
+            public string? UnidadNegocio { get; set; }
+            public string? Cargo { get; set; }
+            public string? Banco { get; set; }
+            public string? CuentaBanco { get; set; }
+            public string? Clabe { get; set; }
         }
 
        
@@ -45,17 +50,24 @@ namespace Seguridad.Core.Application
                 if (existe) {
                     throw new Exception("El correo del usuario ya existe");
                 }
-
-
+                var existeuser = await _context.Users.Where(x => x.UserName == request.UserName).AnyAsync();
+                if (existeuser)
+                {
+                    throw new Exception("El Nombre de Usuario ya existe");
+                }
                 var usuario = new Usuario
                 {
                     Nombre = request.Nombre,
                     Apellido = request.Apellido,
                     Email = request.Email,
                     UserName = request.UserName,
+                    UnidadNegocio = request.UnidadNegocio,
+                    Cargo = request.Cargo,
+                    Banco = request.Banco,
+                    CuentaBanco = request.CuentaBanco,
+                    Clabe = request.Clabe,
                 };
                 
-
                 IdentityResult crearUsuario = await _userManager.CreateAsync(usuario, request.Password!);
                 if (crearUsuario.Succeeded) {
                     

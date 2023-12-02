@@ -50,6 +50,11 @@ namespace Seguridad.Core.Application
                         Apellido = usuario.Apellido,
                         UserName = usuario.UserName,
                         Correo = usuario.Email,
+                        UnidadNegocio = usuario.UnidadNegocio,
+                        Cargo = usuario.Cargo,
+                        Banco = usuario.Banco,
+                        CuentaBanco = usuario.CuentaBanco,
+                        Clabe = usuario.Clabe,
                         Rol = roles[0],
                         Activo = activo
                     });

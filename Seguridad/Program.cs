@@ -92,7 +92,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
 app.UseCors(builder => builder
     .AllowAnyHeader()
     .AllowAnyMethod()

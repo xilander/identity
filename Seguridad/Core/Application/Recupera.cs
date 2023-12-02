@@ -5,13 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using Seguridad.Core.Data;
 using Seguridad.Core.Dto;
 using Seguridad.Core.Entities;
-using Seguridad.Core.JwtLogic;
-using Seguridad.Core.Services;
-using static Seguridad.Core.Entities.EmailConfiguration;
 
 namespace Seguridad.Core.Application
 {
-	public class Recupera
+    public class Recupera
 	{
 		public class RecuperaPasswordCommand : IRequest<UsuarioDto>
 		{
@@ -57,7 +54,7 @@ namespace Seguridad.Core.Application
 					}
 					else
 					{
-						throw new Exception("Expiro el tiempo de restablecimiento");
+						throw new Exception(result.ToString());
 					}
 
 				}
