@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Seguridad.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialIdentity : Migration
+    public partial class Inicial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,14 +31,19 @@ namespace Seguridad.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
+                    Nombre = table.Column<string>(type: "text", nullable: true),
+                    Apellido = table.Column<string>(type: "text", nullable: true),
+                    UnidadNegocio = table.Column<string>(type: "text", nullable: true),
+                    Cargo = table.Column<string>(type: "text", nullable: true),
+                    Banco = table.Column<string>(type: "text", nullable: true),
+                    CuentaBanco = table.Column<string>(type: "text", nullable: true),
+                    Clabe = table.Column<string>(type: "text", nullable: true),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedEmail = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     EmailConfirmed = table.Column<bool>(type: "boolean", nullable: false),
                     PasswordHash = table.Column<string>(type: "text", nullable: true),
-                    Nombre = table.Column<string>(type: "character varying(256)", maxLength: 25, nullable: true),
-                    Apellido = table.Column<string>(type: "character varying(256)", maxLength: 25, nullable: true),
                     SecurityStamp = table.Column<string>(type: "text", nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "text", nullable: true),
                     PhoneNumber = table.Column<string>(type: "text", nullable: true),

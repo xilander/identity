@@ -71,7 +71,7 @@ namespace Seguridad.Controllers
 
         [HttpPut("actualiza-usuario")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<UsuarioDto>> Actualizar(ActualizaUsuario.ActualizaUsuarioCommand parametros, IMediator _mediator)
+        public async Task<ActionResult<UsuarioDto>>Actualizar(ActualizaUsuario.ActualizaUsuarioCommand parametros, IMediator _mediator)
         {
             _logger.LogInformation("Usuario actualizado: {usuarioID} el {DT}", parametros.Email, DateTime.UtcNow.ToLocalTime());
             return await _mediator.Send(parametros);

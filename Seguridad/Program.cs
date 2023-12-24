@@ -50,7 +50,6 @@ builder.Services.AddIdentity<Usuario, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-
 builder.Services.AddAuthorization();
 
 SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes("PwgGWhA738I4HoJHEMxEZttLUunzBmpY"));
@@ -82,7 +81,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateAsyncScope())
 {
     var services = scope.ServiceProvider;
-    await SiembraUsuario.Initialize(services);
+    await DBInitializer.Initialize(services);
 }
 
 // Configure the HTTP request pipeline.

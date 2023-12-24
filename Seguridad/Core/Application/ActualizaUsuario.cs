@@ -31,12 +31,14 @@ namespace Seguridad.Core.Application
         {
             private readonly ApplicationDbContext _context;
             private readonly UserManager<Usuario> _userManager;
+            private readonly RoleManager<IdentityRole> _roleManager;
             private readonly IMapper _mapper;
 
-            public ActualizaUsuarioHandler(ApplicationDbContext context, UserManager<Usuario> userManager, IMapper mapper)
+            public ActualizaUsuarioHandler(ApplicationDbContext context, UserManager<Usuario> userManager, IMapper mapper, RoleManager<IdentityRole> roleManager)
             {
                 _context = context;
                 _userManager = userManager;
+                _roleManager = roleManager;
                 _mapper = mapper;
             }
             
@@ -81,13 +83,20 @@ namespace Seguridad.Core.Application
                 IdentityResult actualizaUsuario = await _userManager.UpdateAsync(usuario);
                 if (actualizaUsuario.Succeeded)
                 {
-                    var usuarioDTO = _mapper.Map<Usuario, UsuarioDto>(usuario!);
+                    var rol = await _userManager.GetRolesAsync(usuario);
+                    var rolAnterior = await _roleManager.FindByNameAsync(rol[0]);
+                    if (request.Rol != rolAnterior!.Name)
+                    {
+                        await _userManager.RemoveFromRoleAsync(usuario, rolAnterior.Name!);
+                        await _userManager.AddToRoleAsync(usuario, request.Rol!);
+                    }
+                    
+                    var usuarioDTO = _mapper.Map<Usuario, UsuarioDto>(usuario);
                     return usuarioDTO;
                 }
 
                 throw new Exception("No se pudo actualizar el usuario");
-            }
-            
+            }            
         }
     }
 }

@@ -65,6 +65,7 @@ namespace Seguridad.Core.Application
                     var tokenCreado = _jwtGenerator.CrearTokenAsync(usuario);
                     usuarioDTO.Token = tokenCreado;
                     usuarioDTO.Rol = roles[0];
+
                     return usuarioDTO;
                 }
 

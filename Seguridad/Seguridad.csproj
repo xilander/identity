@@ -35,7 +35,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
     <Folder Include="Core\Services\" />
     <Folder Include="Resources\" />
     <Folder Include="Resources\Plantillas\" />

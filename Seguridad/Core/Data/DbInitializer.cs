@@ -3,7 +3,7 @@ using Seguridad.Core.Entities;
 
 namespace Seguridad.Core.Data
 {
-    public class SiembraUsuario
+    public class DBInitializer
 	{
         public static async Task Initialize(IServiceProvider serviceProvider)
         {
@@ -28,8 +28,8 @@ namespace Seguridad.Core.Data
             {
                 var adminUser = new Usuario
                 {
-                    UserName = "admin",
-                    Email = "admin@test.com",
+                    UserName = "GangOfFour",
+                    Email = "xilander@gmail.com",
                     Nombre = "Gang",
                     Apellido = "of Four"
                 };
