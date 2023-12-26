@@ -50,7 +50,11 @@ namespace Seguridad.Core.Application
                     }
                     else
                     {
-                        var desactivaUsuario = await _userManager.SetLockoutEndDateAsync(usuario!, DateTimeOffset.MaxValue);
+                        //var desactivaUsuario = await _userManager.SetLockoutEndDateAsync(usuario!, DateTimeOffset.MaxValue);
+                        var desactivaUsuario = await _context.Database.ExecuteSqlAsync($@"
+                            UPDATE ""AspNetUsers"" SET ""LockoutEnd"" = '3020-01-31 00:00:00' WHERE ""Email"" =  {request.Email}
+                        ");
+                        
                         respuesta.Mensaje = "El usuario ha sido desactivado";
                     }
                     return respuesta;
