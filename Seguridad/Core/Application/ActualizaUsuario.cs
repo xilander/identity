@@ -25,18 +25,22 @@ namespace Seguridad.Core.Application
             public string? Banco { get; set; }
             public string? CuentaBanco { get; set; }
             public string? Clabe { get; set; }
+
+            public string? nuevoRol { get; set; }
         }
 
         public class ActualizaUsuarioHandler : IRequestHandler<ActualizaUsuarioCommand, UsuarioDto>
         {
             private readonly ApplicationDbContext _context;
             private readonly UserManager<Usuario> _userManager;
+            private readonly RoleManager<IdentityRole> _roleManager;
             private readonly IMapper _mapper;
 
-            public ActualizaUsuarioHandler(ApplicationDbContext context, UserManager<Usuario> userManager, IMapper mapper)
+            public ActualizaUsuarioHandler(ApplicationDbContext context, UserManager<Usuario> userManager, IMapper mapper, RoleManager<IdentityRole> roleManager)
             {
                 _context = context;
                 _userManager = userManager;
+                _roleManager = roleManager;
                 _mapper = mapper;
             }
             
@@ -68,6 +72,15 @@ namespace Seguridad.Core.Application
                         throw new Exception("El Nombre de Usuario ya existe");
                     }
                 }
+
+                var roles = await _userManager.GetRolesAsync(usuario!);
+                var rolAnterior = await _roleManager.FindByNameAsync(roles[0]);
+                if (request.Rol != rolAnterior!.Name)
+                {
+                    await _userManager.RemoveFromRoleAsync(usuario!, rolAnterior.Name!);
+                    await _userManager.AddToRoleAsync(usuario!, request.Rol!);
+                }
+
                 usuario!.Nombre = request.Nombre;
                 usuario!.Apellido = request.Apellido;
                 usuario!.Email = request.Email;
@@ -85,7 +98,7 @@ namespace Seguridad.Core.Application
                     return usuarioDTO;
                 }
 
-                throw new Exception("No se pudo actualizar el usuario");
+                 throw new Exception("No se pudo actualizar el usuario");
             }
             
         }
